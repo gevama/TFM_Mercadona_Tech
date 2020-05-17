@@ -8,6 +8,7 @@ import scipy.stats as stats  # For statistical inference
 import pandas_profiling
 from pandas_profiling import ProfileReport
 import pickle
+from sklearn.preprocessing import StandardScaler, Normalizer
 
 
 
@@ -52,6 +53,45 @@ non_fraud_df.to_file("non_fraud_df.html")
 
 country_codes_df = ProfileReport(country_codes_df, title='Pandas Profiling Report', html={'style':{'full_width':True}})
 country_codes_df.to_file("country_codes_df.html")
+
+
+
+
+########## Let's clean the data ##########
+#Analisis of the null values
+concatenated_fraud_df.isnull() 
+concatenated_fraud_df.isnull().sum()[concatenated_fraud_df.isnull().sum() > 0]
+
+# creating bool series True for NaN values  
+bool_series = pd.isnull(concatenated_fraud_df)  
+    
+# filtering data  
+# displayind data only with Gender = Not NaN  
+concatenated_fraud_df[bool_series]  
+
+
+#Drop missing values 
+concatenated_fraud_df2 = concatenated_fraud_df.dropna() 
+
+
+#Normalization of the dataset 
+concatenated_fraud_df2.dtypes()
+
+
+sc = StandardScaler()
+sc.fit(concatenated_fraud_df2)
+normalized_concatenated_fraud_df2 = sc.transform(concatenated_fraud_df2)
+plt.hist(concatenated_fraud_df2)
+
+
+# filling missing value using fillna()   
+#df.fillna(0) 
+# will replace  Nan value in dataframe with value -99   
+#data.replace(to_replace = np.nan, value = -99)  
+
+
+
+
 
 
 with open('product_categories.pkl','rb') as file:
